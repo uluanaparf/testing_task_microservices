@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "accounting-service")
 public interface AccountingClient {
-    @PostMapping("/auth/API/accountingBook")
+    @PostMapping("/accountingBook")
     void addBook(@RequestBody AccountingBookDTO accountingBookDTO);
 }

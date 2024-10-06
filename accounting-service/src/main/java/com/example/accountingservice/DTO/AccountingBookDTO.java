@@ -6,13 +6,20 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class AccountingBookDTO {
+
     @NotNull(message = "Book ID cannot be null")
     private Long bookId;
-
     private LocalDateTime borrowedAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime returnBy;
+
+    public AccountingBookDTO() {}
+
+    public AccountingBookDTO(LocalDateTime borrowedAt, LocalDateTime returnBy) {
+        this.borrowedAt = borrowedAt;
+        this.returnBy = returnBy;
+    }
 
     public Long getBookId() {
         return bookId;
