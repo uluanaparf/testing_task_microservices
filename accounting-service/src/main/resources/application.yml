@@ -3,9 +3,15 @@ server:
 
 spring:
   application:
-    name: ACCOUNTING-SERVER
+    name: ACCOUNTING-SERVICE
 
 eureka:
   client:
     service-url:
       defaultZone : http://localhost:8761/eureka/
+
+springdoc:
+  api-docs:
+    path: /ACCOUNTING-SERVICE/v3/api-docs
+  swagger-ui:
+    path: /ACCOUNTING-SERVICE/swagger-ui.html

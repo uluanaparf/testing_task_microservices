@@ -3,6 +3,8 @@ package com.example.bookservice.controller;
 import com.example.bookservice.DTO.BookDTO;
 import com.example.bookservice.model.Book;
 import com.example.bookservice.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,21 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    @Tag(name="Получение данных о книгах",description = "Позволяет увидеть список всех книг или информацию о конкретной книге")
+    @Operation(
+            summary = "Получение списка книг",
+            description = "Позволяет увидеть все книги находящиеся в базе"
+    )
     @GetMapping
     public List<Book> getAllBooks(){
         return bookService.getAllBooks();
     }
 
+    @Tag(name="Получение данных о книгах",description = "Позволяет увидеть список всех книг или информацию о конкретной книге")
+    @Operation(
+            summary = "Получение книги по id",
+            description = "Позволяет получить информацию о конкретной книге"
+    )
     @GetMapping("{id}")
     public ResponseEntity<?> getBookById(@PathVariable Long id){
         try {
@@ -37,6 +49,11 @@ public class BookController {
         }
     }
 
+    @Tag(name="Получение данных о книгах",description = "Позволяет увидеть список всех книг или информацию о конкретной книге")
+    @Operation(
+            summary = "Получение книги по isbn",
+            description = "Позволяет получить информацию о конкретной книге"
+    )
     @GetMapping("isbn/{isbn}")
     public ResponseEntity<?> getBookByIsbn(@PathVariable String isbn) {
         try {
@@ -47,6 +64,7 @@ public class BookController {
         }
     }
 
+    @Tag(name="Добавление книги", description = "Позволяет добавить новую книгу в базу данных")
     @PostMapping
     public ResponseEntity<?> addBook(@Valid @RequestBody BookDTO bookDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -65,7 +83,7 @@ public class BookController {
         }
     }
 
-
+    @Tag(name="Редактирование книги", description = "Позволяет отредактировать книгу")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -85,7 +103,7 @@ public class BookController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
+    @Tag(name="Удаление книги", description = "Позволяет удалить книгу из базы данных")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         try {

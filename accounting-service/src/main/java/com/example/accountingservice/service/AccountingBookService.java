@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 @Service
 public class AccountingBookService {
+
     @Autowired
     private AccountingBookRepository accountingBookRepository;
 

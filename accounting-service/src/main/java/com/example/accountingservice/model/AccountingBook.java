@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table (name = "accounting_books")
 public class AccountingBook {
+
     @Id
     private Long bookId;
 

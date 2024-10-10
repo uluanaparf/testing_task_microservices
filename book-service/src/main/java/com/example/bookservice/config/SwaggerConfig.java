@@ -16,5 +16,6 @@ public class SwaggerConfig {
                         .description("This is the REST API for Book Service")
                         .version("v0.0.1")
                         .license(new License().name("Apache 2.0")));
+
     }
 }

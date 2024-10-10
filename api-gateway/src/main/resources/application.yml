@@ -1,3 +1,9 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: API-GATEWAY
+---
 spring:
   cloud:
     gateway:
@@ -5,33 +11,48 @@ spring:
         - id: book-service
           uri: lb://BOOK-SERVICE
           predicates:
-            - Path=/books/**
+            - Path=/books/**,/BOOK-SERVICE/**
           filters:
             - AuthenticationFilter
-
 
         - id: accounting-service
           uri: lb://ACCOUNTING-SERVICE
           predicates:
-            - Path=/accountingBook/**
+            - Path=/accountingBook/**,/ACCOUNTING-SERVICE/**
           filters:
             - AuthenticationFilter
-
 
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/auth/**
-
-
-  application:
-    name: API-GATEWAY
-
-server:
-  port: 8080
+            - Path=/auth/**,/AUTH-SERVICE/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns:
+              -"*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "Authorization"  # Разрешить заголовок авторизации
+              - "*"
+            allowCredentials: true
 
 eureka:
   client:
     service-url:
       defaultZone : http://localhost:8761/eureka/
 
+springdoc:
+  swagger-ui:
+    urls:
+      - url: /BOOK-SERVICE/v3/api-docs
+        name: Book Service API
+      - url: /ACCOUNTING-SERVICE/v3/api-docs
+        name: Accounting Book Service API
+      - url: /AUTH-SERVICE/v3/api-docs
+        name: Authentication Service API

@@ -10,11 +10,12 @@ import java.util.function.Predicate;
 public class RouteValidator {
 
     public static final List<String> openApiEndpoints = List.of(
-            "/auth/register",
-            "/auth/login",
+            "/auth/*",
             "/eureka",
-            "/swagger-ui/**",
-            "/v3/api-docs/**"
+            "/webjars/swagger-ui",
+            "/swagger-ui",
+            "/v3/api-docs"
+
     );
 
     public Predicate<ServerHttpRequest> isSecured =

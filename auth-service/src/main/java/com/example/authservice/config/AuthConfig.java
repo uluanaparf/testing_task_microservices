@@ -16,17 +16,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class AuthConfig {
+
     @Bean
     public UserDetailsService userDetailsService(){
         return new CustomUserDetailsService();
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login", "/auth/validate", "/swagger-ui/**","/v3/api-docs/**").permitAll()
+                        .requestMatchers("/AUTH-SERVICE/**","/auth/register",
+                                "/auth/login", "/auth/validate", "/swagger-ui/**",
+                                "/v3/api-docs","/v3/api-docs/**").permitAll()
                 );
         return http.build();
     }

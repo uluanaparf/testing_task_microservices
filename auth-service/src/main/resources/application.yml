@@ -1,3 +1,6 @@
+server:
+  port: 0
+
 spring:
   application:
     name: AUTH-SERVICE
@@ -7,6 +10,8 @@ eureka:
     service-url:
       defaultZone : http://localhost:8761/eureka/
 
-
-server:
-  port: 9898
+springdoc:
+  api-docs:
+    path: /AUTH-SERVICE/v3/api-docs
+  swagger-ui:
+    path: /AUTH-SERVICE/swagger-ui.html
