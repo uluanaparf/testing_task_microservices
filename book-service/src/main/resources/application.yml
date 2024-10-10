@@ -1,13 +1,74 @@
 server:
+  servlet:
+    context-path: /
   port: 0
 
 spring:
+  profiles:
+    active:
+      - ${ACTIVE_SPRING_PROFILE:dev}
   application:
     name: BOOK-SERVICE
 
+openapi:
+  service:
+    title: Book service doc
+    version: 1.0.0
+    url: http://localhost:8080
+springdoc:
+  api-docs:
+    path: /book-service/v3/api-docs
+  swagger-ui:
+    path: /book-service/swagger-ui.html
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+openapi:
+  service:
+    url: http://localhost:8080
 
 eureka:
   client:
     service-url:
-      defaultZone : http://localhost:8761/eureka/
+      defaultZone: http://localhost:8761/eureka
+---
 
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+openapi:
+  service:
+    url: http://localhost:8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "books")
 public class Book {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +22,8 @@ public class Book {
 
     public Book() {}
 
-    public Book(String isbn, String title, String genre, String description, String author) {
+    public Book(Long id,String isbn, String title, String genre, String description, String author) {
+        this.id = id;
         this.isbn = isbn;
         this.title = title;
         this.genre = genre;

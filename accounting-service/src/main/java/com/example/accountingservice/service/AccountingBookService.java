@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 @Service
 public class AccountingBookService {
+
     @Autowired
     private AccountingBookRepository accountingBookRepository;
 
@@ -43,7 +44,6 @@ public class AccountingBookService {
         accountingBook.setReturnBy(accountingBookDTO.getReturnBy());
         return accountingBookRepository.save(accountingBook);
     }
-
 
     public AccountingBook updateReturnBy(Long id, LocalDateTime returnBy) {
         AccountingBook accountingBook = accountingBookRepository.findById(id).orElseThrow(() ->
