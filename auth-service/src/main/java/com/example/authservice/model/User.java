@@ -13,7 +13,7 @@ public class User {
 
     @Column(nullable = false, unique = true)
     @NotEmpty(message = "Name can't be empty")
-    private String name;
+    private String username;
 
     @NotEmpty(message = "Password can't be empty")
     @Column(nullable = false,unique = true)
@@ -23,8 +23,8 @@ public class User {
 
     public User() {}
 
-    public User( String name, String password, String email) {
-        this.name = name;
+    public User( String username, String password, String email) {
+        this.username = username;
         this.password = password;
         this.email = email;
     }
@@ -37,12 +37,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

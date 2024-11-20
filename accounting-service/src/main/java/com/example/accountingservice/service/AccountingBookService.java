@@ -1,15 +1,18 @@
 package com.example.accountingservice.service;
 
-import com.example.accountingservice.DTO.AccountingBookDTO;
+import com.example.accountingservice.dto.AccountingBookRequestDto;
+import com.example.accountingservice.dto.AccountingBookResponseDto;
+import com.example.accountingservice.mapper.AccountingBookMapper;
 import com.example.accountingservice.model.AccountingBook;
 import com.example.accountingservice.repository.AccountingBookRepository;
-import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountingBookService {
@@ -18,37 +21,49 @@ public class AccountingBookService {
     private AccountingBookRepository accountingBookRepository;
 
     @Autowired
-    private Validator validator;
+    private AccountingBookMapper accountingBookMapper;
 
-    public List<AccountingBook> getAllBooks(){
-        return accountingBookRepository.findAll();
+    public List<AccountingBookResponseDto> getAllBooks(){
+        List<AccountingBook> books = accountingBookRepository.findAll();
+        return books.stream()
+                .map(accountingBookMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public List<AccountingBook> getBorrowedBooks(){
-        return accountingBookRepository.findByReturnByIsNull();
+    public List<AccountingBookResponseDto> getBorrowedBooks(){
+        List<AccountingBook> books = accountingBookRepository.findByReturnByIsNull();
+        return  books.stream()
+                .map(accountingBookMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public List<AccountingBook> getReturnedBooks() {
-        return accountingBookRepository.findByReturnByIsNotNull();
+    public List<AccountingBookResponseDto> getReturnedBooks() {
+        List<AccountingBook> books = accountingBookRepository.findByReturnByIsNotNull();
+        return  books.stream()
+                .map(accountingBookMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public AccountingBook getAccountingBookById(Long id) {
-        return accountingBookRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Such book not found"));
+    public AccountingBookResponseDto getAccountingBookById(Long id) {
+        AccountingBook accountingBook = accountingBookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Such book not found"));
+        return accountingBookMapper.toResponseDto(accountingBook);
     }
 
-    public AccountingBook addAccountingBook(AccountingBookDTO accountingBookDTO) {
-        validator.validate(accountingBookDTO);
-        AccountingBook accountingBook = new AccountingBook();
-        accountingBook.setBookId(accountingBookDTO.getBookId());
-        accountingBook.setBorrowedAt(accountingBookDTO.getBorrowedAt());
-        accountingBook.setReturnBy(accountingBookDTO.getReturnBy());
-        return accountingBookRepository.save(accountingBook);
+    @Transactional
+    public AccountingBookResponseDto addAccountingBook(AccountingBookRequestDto accountingBookRequestDto) {
+        AccountingBook accountingBook = accountingBookMapper.toEntity(accountingBookRequestDto);
+        AccountingBook savedBook = accountingBookRepository.save(accountingBook);
+        return accountingBookMapper.toResponseDto(savedBook);
     }
 
-    public AccountingBook updateReturnBy(Long id, LocalDateTime returnBy) {
-        AccountingBook accountingBook = accountingBookRepository.findById(id).orElseThrow(() ->
-                new NoSuchElementException("We did not find a book with this id. Try again"));
-        accountingBook.setReturnBy(returnBy);
-        return accountingBookRepository.save(accountingBook);
+    @Transactional
+    public AccountingBookResponseDto updateAccountingBook(Long id, AccountingBookRequestDto accountingBookRequestDto) {
+        AccountingBook accountingBook = accountingBookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("We did not find a book with this id. Try again"));
+        accountingBook.setReturnBy(accountingBookRequestDto.getReturnBy());
+        accountingBook.setBorrowedAt(accountingBookRequestDto.getBorrowedAt());
+        AccountingBook updatedBook = accountingBookRepository.save(accountingBook);
+        return accountingBookMapper.toResponseDto(updatedBook);
     }
 }

@@ -32,12 +32,12 @@ public class RouteConfig  {
                 .route(r -> r.path("/books/{id}").and().method(HttpMethod.DELETE).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://BOOK-SERVICE"))
 
 
-                .route(r -> r.path("/accountingBook").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
-                .route(r -> r.path("/accountingBook/borrowed").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
-                .route(r -> r.path("/accountingBook/returned").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
-                .route(r -> r.path("/accountingBook/{id}").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
-                .route(r -> r.path("/accountingBook/{id}/return-by").and().method(HttpMethod.PUT).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
-                .route(r -> r.path("/accountingBook").and().method(HttpMethod.POST).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
+                .route(r -> r.path("/accounting -book").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
+                .route(r -> r.path("/accounting-book/borrowed").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
+                .route(r -> r.path("/accounting-book/returned").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
+                .route(r -> r.path("/accounting-book/{id}").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
+                .route(r -> r.path("/accounting-book/{id}/return-by").and().method(HttpMethod.PUT).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
+                .route(r -> r.path("/accounting-book").and().method(HttpMethod.POST).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
 
 
                 .route(r -> r.path("/auth/register").and().method(HttpMethod.POST).uri("lb://AUTH-SERVICE"))

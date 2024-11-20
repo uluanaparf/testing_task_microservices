@@ -1,18 +1,21 @@
 package com.example.bookservice.service;
 
 
-import com.example.accountingservice.DTO.AccountingBookDTO;
-import com.example.bookservice.DTO.BookDTO;
+import com.example.bookservice.dto.AccountingBookDto;
+import com.example.bookservice.dto.BookRequestDto;
+import com.example.bookservice.dto.BookResponseDto;
+import com.example.bookservice.mapper.BookMapper;
 import com.example.bookservice.model.Book;
 import com.example.bookservice.repository.BookRepository;
-import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.bookservice.client.AccountingClient;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -21,59 +24,69 @@ public class BookService {
     private BookRepository bookRepository;
 
     @Autowired
-    private Validator validator;
+    private BookMapper bookMapper;
+
 
     @Autowired
     private AccountingClient accountingClient;
 
-    public List<Book> getAllBooks(){
-        return bookRepository.findAll();
+    public List<BookResponseDto> getAllBooks(){
+        List<Book> books = bookRepository.findAll();
+        return books.stream()
+                .map(bookMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public Book getBookById(Long id){
-        return bookRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Book not found"));
+    public BookResponseDto getBookById(Long id){
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Such book not found"));
+        return bookMapper.toResponseDto(book);
     }
 
-    public Book getBookByIsbn(String isbn){
-        return bookRepository.findByIsbn(isbn).orElseThrow(() -> new NoSuchElementException("Book not found"));
+    public BookResponseDto getBookByIsbn(String isbn){
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new NoSuchElementException("Such book not found"));
+        return bookMapper.toResponseDto(book);
     }
 
-    public Book addBook(BookDTO bookDTO){
-        validator.validate(bookDTO);
-        Book book = new Book();
-        book.setIsbn(bookDTO.getIsbn());
-        book.setTitle(bookDTO.getTitle());
-        book.setGenre(bookDTO.getGenre());
-        book.setDescription(bookDTO.getDescription());
-        book.setAuthor(bookDTO.getAuthor());
+    @Transactional
+    public BookResponseDto addBook(BookRequestDto bookRequestDto){
+
+        if (bookRepository.findByIsbn(bookRequestDto.getIsbn()).isPresent()) {
+            throw new IllegalArgumentException("ISBN already exists."); }
+        Book book = bookMapper.toEntity(bookRequestDto);
         Book savedBook = bookRepository.save(book);
+        AccountingBookDto accountingBookDto = new AccountingBookDto();
+        accountingBookDto.setBookId(savedBook.getId());
+        accountingBookDto.setBorrowedAt(null);
+        accountingBookDto.setReturnedBy(null);
+        accountingClient.addBook(accountingBookDto);
 
-        AccountingBookDTO accountingBookDTO = new AccountingBookDTO();
-        accountingBookDTO.setBookId(savedBook.getId());
-        accountingBookDTO.setBorrowedAt(LocalDateTime.now());
-        accountingBookDTO.setReturnBy(null);
-
-        accountingClient.addBook(accountingBookDTO);
-
-        return savedBook;
+        return bookMapper.toResponseDto(savedBook);
     }
 
-    public Book updateBook(Long id, BookDTO bookDTO){
-        validator.validate(bookDTO);
+    @Transactional
+    public BookResponseDto updateBook(Long id, BookRequestDto bookRequestDto){
 
-        Book book = bookRepository.findById(id).orElseThrow(() ->
-                new NoSuchElementException("We did not find a book with this id. Try again"));
-        book.setIsbn(bookDTO.getIsbn());
-        book.setTitle(bookDTO.getTitle());
-        book.setGenre(bookDTO.getGenre());
-        book.setDescription(bookDTO.getDescription());
-        book.setAuthor(bookDTO.getAuthor());
-        return bookRepository.save(book);
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("We did not find a book with this id. Try again"));
+        Optional<Book> existingBookWithIsbn = bookRepository.findByIsbn(bookRequestDto.getIsbn());
+        if (existingBookWithIsbn.isPresent() && !existingBookWithIsbn.get().getId().equals(id)) {
+            throw new IllegalArgumentException("ISBN already exists.");
+        }
+        book.setIsbn(bookRequestDto.getIsbn());
+        book.setTitle(bookRequestDto.getTitle());
+        book.setGenre(bookRequestDto.getGenre());
+        book.setDescription(bookRequestDto.getDescription());
+        book.setAuthor(bookRequestDto.getAuthor());
+        Book updateBook = bookRepository.save(book);
+        return bookMapper.toResponseDto(updateBook);
     }
 
+    @Transactional
     public void deleteBook(long id){
-        Book book = bookRepository.findById(id).orElseThrow(() ->
-                new NoSuchElementException("We did not find a book with this id. Try again"));
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("We did not find a book with this id. Try again"));
         bookRepository.delete(book);
     }
 }

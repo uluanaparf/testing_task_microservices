@@ -1,4 +1,4 @@
-package com.example.authservice.config;
+package com.example.authservice.details;
 
 import com.example.authservice.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +12,7 @@ public class CustomUserDetails implements UserDetails{
     private String password;
 
     public CustomUserDetails(User user) {
-        this.username = user.getName();
+        this.username = user.getUsername();
         this.password = user.getPassword();
     }
 

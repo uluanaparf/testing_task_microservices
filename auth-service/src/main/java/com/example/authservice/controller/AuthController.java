@@ -1,11 +1,17 @@
 package com.example.authservice.controller;
 
-import com.example.authservice.DTO.AuthRequest;
+import com.example.authservice.dto.AuthRequestDto;
+import com.example.authservice.dto.AuthResponseDto;
+import com.example.authservice.dto.RegistRequestDto;
+import com.example.authservice.dto.RegistResponseDto;
 import com.example.authservice.model.User;
 import com.example.authservice.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,8 +34,9 @@ public class AuthController {
             description = "Позволяет зарегистрировать пользователя"
     )
     @PostMapping("/register")
-    public String registerUser(@RequestBody User user) {
-        return authService.saveUser(user);
+    public ResponseEntity<RegistResponseDto> registerUser(@Valid @RequestBody RegistRequestDto registRequestDto) {
+        RegistResponseDto responseDto = authService.saveUser(registRequestDto);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @Tag(name="Пользователи",description ="Авторизация и регистрация пользователя" )
@@ -38,19 +45,15 @@ public class AuthController {
             description = "Позволяет получить пользователю токен"
     )
     @PostMapping("/login")
-    public String getToken(@RequestBody AuthRequest authRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        if(authentication.isAuthenticated()) {
-            return authService.generateToken(authRequest.getUsername());
-        } else{
-            throw new BadCredentialsException("Invalid username or password");
-        }
+    public ResponseEntity<AuthResponseDto> getToken( @Valid @RequestBody AuthRequestDto authRequest) {
+       AuthResponseDto responseDto = authService.generateToken(authRequest);
+       return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @Tag(name="Валидация",description ="Проверка токена на валидность (активность)")
     @GetMapping("/validate")
-    public String validateToken(@RequestParam("token") String token) {
-        authService.validateToken(token);
-        return " Token validated successfully ";
+    public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
+        String validMessage = authService.validateToken(token);
+        return new ResponseEntity<>(validMessage, HttpStatus.OK);
     }
 }

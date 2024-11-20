@@ -1,4 +1,4 @@
-package com.example.authservice.config;
+package com.example.authservice.details;
 
 import com.example.authservice.model.User;
 import com.example.authservice.repository.UserRepository;
@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
      @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-         Optional<User> user = userRepository.findByName(username);
+         Optional<User> user = userRepository.findByUsername(username);
          return user.map(CustomUserDetails::new).orElseThrow(() -> new UsernameNotFoundException("User not found with name :" + username));
      }
 }

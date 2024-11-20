@@ -5,10 +5,18 @@
   <groupId>com.example</groupId>
   <artifactId>library_microservice</artifactId>
   <version>1.0</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <name>library_microservice</name>
   <url>http://maven.apache.org</url>
+
+  <modules>
+    <module>eureka-server</module>
+    <module>auth-service</module>
+    <module>book-service</module>
+    <module>accounting-service</module>
+    <module>api-gateway</module>
+  </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
