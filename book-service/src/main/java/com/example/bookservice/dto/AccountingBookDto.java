@@ -6,6 +6,15 @@ public class AccountingBookDto {
     private Long bookId;
     private LocalDateTime borrowedAt;
     private LocalDateTime returnedBy;
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public Long getBookId() {
         return bookId;

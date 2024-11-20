@@ -31,14 +31,14 @@ public class AccountingBookService {
     }
 
     public List<AccountingBookResponseDto> getBorrowedBooks(){
-        List<AccountingBook> books = accountingBookRepository.findByReturnByIsNull();
+        List<AccountingBook> books = accountingBookRepository.findByReturnedByIsNull();
         return  books.stream()
                 .map(accountingBookMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
     public List<AccountingBookResponseDto> getReturnedBooks() {
-        List<AccountingBook> books = accountingBookRepository.findByReturnByIsNotNull();
+        List<AccountingBook> books = accountingBookRepository.findByReturnedByIsNotNull();
         return  books.stream()
                 .map(accountingBookMapper::toResponseDto)
                 .collect(Collectors.toList());
@@ -53,6 +53,7 @@ public class AccountingBookService {
     @Transactional
     public AccountingBookResponseDto addAccountingBook(AccountingBookRequestDto accountingBookRequestDto) {
         AccountingBook accountingBook = accountingBookMapper.toEntity(accountingBookRequestDto);
+        accountingBook.setBookId(accountingBookRequestDto.getBookId());
         AccountingBook savedBook = accountingBookRepository.save(accountingBook);
         return accountingBookMapper.toResponseDto(savedBook);
     }
@@ -61,7 +62,7 @@ public class AccountingBookService {
     public AccountingBookResponseDto updateAccountingBook(Long id, AccountingBookRequestDto accountingBookRequestDto) {
         AccountingBook accountingBook = accountingBookRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("We did not find a book with this id. Try again"));
-        accountingBook.setReturnBy(accountingBookRequestDto.getReturnBy());
+        accountingBook.setReturnedBy(accountingBookRequestDto.getReturnedBy());
         accountingBook.setBorrowedAt(accountingBookRequestDto.getBorrowedAt());
         AccountingBook updatedBook = accountingBookRepository.save(accountingBook);
         return accountingBookMapper.toResponseDto(updatedBook);

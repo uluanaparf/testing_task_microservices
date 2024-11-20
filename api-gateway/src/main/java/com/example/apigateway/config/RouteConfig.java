@@ -32,7 +32,7 @@ public class RouteConfig  {
                 .route(r -> r.path("/books/{id}").and().method(HttpMethod.DELETE).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://BOOK-SERVICE"))
 
 
-                .route(r -> r.path("/accounting -book").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
+                .route(r -> r.path("/accounting-book").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
                 .route(r -> r.path("/accounting-book/borrowed").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
                 .route(r -> r.path("/accounting-book/returned").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))
                 .route(r -> r.path("/accounting-book/{id}").and().method(HttpMethod.GET).filters(f -> f.filter(authenticationFilter.apply(new AuthenticationFilter.Config()))).uri("lb://ACCOUNTING-SERVICE"))

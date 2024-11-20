@@ -14,38 +14,51 @@ public class AccountingBook {
     private Long bookId;
 
     private LocalDateTime borrowedAt;
-    private LocalDateTime returnBy;
+    private LocalDateTime returnedBy;
+    private String title;
 
-    public AccountingBook(){}
 
-    public AccountingBook(Long bookId, LocalDateTime borrowedAt, LocalDateTime returnBy){
-        this.bookId = bookId;
-        this.borrowedAt = borrowedAt;
-        this.returnBy = returnBy;
+    public AccountingBook() {
     }
 
-    public Long getBookId(){
+    public AccountingBook(Long bookId, LocalDateTime borrowedAt, LocalDateTime returnedBy, String title) {
+        this.bookId = bookId;
+        this.borrowedAt = borrowedAt;
+        this.returnedBy = returnedBy;
+        this.title = title;
+    }
+
+    public Long getBookId() {
         return bookId;
     }
 
-    public void setBookId(Long bookId){
+    public void setBookId(Long bookId) {
         this.bookId = bookId;
     }
 
-    public LocalDateTime getBorrowedAt(){
+    public LocalDateTime getBorrowedAt() {
         return borrowedAt;
     }
 
-    public void setBorrowedAt(LocalDateTime borrowedAt){
+    public void setBorrowedAt(LocalDateTime borrowedAt) {
         this.borrowedAt = borrowedAt;
     }
 
-    public LocalDateTime getReturnBy(){
-        return returnBy;
+    public LocalDateTime getReturnedBy() {
+        return returnedBy;
     }
 
-    public void setReturnBy(LocalDateTime returnBy){
-        this.returnBy = returnBy;
+    public void setReturnedBy(LocalDateTime returnedBy) {
+        this.returnedBy = returnedBy;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 
 }

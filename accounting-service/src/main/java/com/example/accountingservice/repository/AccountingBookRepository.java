@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AccountingBookRepository extends JpaRepository<AccountingBook, Long> {
-    List<AccountingBook> findByReturnByIsNull();
-    List<AccountingBook> findByReturnByIsNotNull();
+    List<AccountingBook> findByReturnedByIsNull();
+    List<AccountingBook> findByReturnedByIsNotNull();
 }

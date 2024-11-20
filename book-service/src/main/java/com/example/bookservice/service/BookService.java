@@ -58,6 +58,7 @@ public class BookService {
         Book savedBook = bookRepository.save(book);
         AccountingBookDto accountingBookDto = new AccountingBookDto();
         accountingBookDto.setBookId(savedBook.getId());
+        accountingBookDto.setTitle(savedBook.getTitle());
         accountingBookDto.setBorrowedAt(null);
         accountingBookDto.setReturnedBy(null);
         accountingClient.addBook(accountingBookDto);
